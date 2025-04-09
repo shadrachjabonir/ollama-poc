@@ -87,10 +87,12 @@ resource "aws_spot_instance_request" "ollama_spot" {
               curl -fsSL https://ollama.com/install.sh | sh
 
               sleep 10
-              OLLAMA_HOST=0.0.0.0 ollama pull deepseek-coder:6.7b
+
               OLLAMA_HOST=0.0.0.0 nohup ollama serve > ~/ollama.log 2>&1 &
+              OLLAMA_HOST=0.0.0.0 ollama pull deepseek-r1
+              OLLAMA_HOST=0.0.0.0 ollama run deepseek-r1
               EOF
   tags = {
-    Name = "olla-poc"
+    Name = "poc-ollama-mcp"
   }
 }
