@@ -1,4 +1,5 @@
 .gitignore
+.idea
 # Local .terraform directories
 .terraform/
 *.tfstate
