@@ -1,0 +1,7 @@
+.gitignore
+# Local .terraform directories
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
