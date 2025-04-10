@@ -7,7 +7,7 @@ variable "instance_type" {
 variable "spot_price" {
   description = "Maximum hourly price you're willing to pay for the Spot Instance"
   type        = string
-  default     = "0.752" # Misalnya, $0.30 per jam
+  default     = "0.8" # Misalnya, $0.30 per jam
 }
 
 variable "public_key_path" {

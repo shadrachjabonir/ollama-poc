@@ -51,7 +51,7 @@ data "aws_ami" "amazon_linux" {
 
   filter {
     name   = "name"
-    values = ["al2023-ami-*-x86_64"]
+    values = ["Deep Learning Base OSS Nvidia Driver GPU AMI (Amazon Linux 2023) *"]
   }
 
   filter {
@@ -66,31 +66,33 @@ data "aws_vpc" "default" {
 
 resource "aws_spot_instance_request" "ollama_spot" {
   ami                    = data.aws_ami.amazon_linux.id
+  //ami                    = "ami-0d2942d2a406a7156"
   instance_type          = var.instance_type
   key_name               = aws_key_pair.poc_mcp.key_name
   vpc_security_group_ids = [aws_security_group.ollama_sg.id]
 
   spot_price           = var.spot_price
   wait_for_fulfillment = true
+  associate_public_ip_address = true
 
   user_data = <<-EOF
               #!/bin/bash
               yum update -y
 
-              # Install Podman
-              yum install -y podman
-              systemctl enable podman
-              systemctl start podman || true
-              podman info || echo "Podman is not running properly"
+              runuser -l ec2-user -c '
+                sudo dnf install -y kernel-devel-$(uname -r) gcc dkms make
+                curl -O https://us.download.nvidia.com/tesla/535.161.07/NVIDIA-Linux-x86_64-535.161.07.run
+                chmod +x NVIDIA-Linux-x86_64-535.161.07.run
+                sudo ./NVIDIA-Linux-x86_64-535.161.07.run --silent
+                sudo modprobe nvidia
+                nvidia-smi || echo "NVIDIA GPU not detected"
 
-              # Install Ollama
-              curl -fsSL https://ollama.com/install.sh | sh
+                curl -fsSL https://ollama.com/install.sh | sh
+                sleep 5
 
-              sleep 10
-
-              OLLAMA_HOST=0.0.0.0 nohup ollama serve > ~/ollama.log 2>&1 &
-              OLLAMA_HOST=0.0.0.0 ollama pull deepseek-r1
-              OLLAMA_HOST=0.0.0.0 ollama run deepseek-r1
+                OLLAMA_HOST=0.0.0.0 nohup ollama serve > /home/ec2-user/ollama.log 2>&1 &
+                OLLAMA_HOST=0.0.0.0 ollama run deepseek-r1
+              '
               EOF
   tags = {
     Name = "poc-ollama-mcp"
