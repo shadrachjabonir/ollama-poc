@@ -90,8 +90,9 @@ resource "aws_spot_instance_request" "ollama_spot" {
                 curl -fsSL https://ollama.com/install.sh | sh
                 sleep 5
 
-                OLLAMA_HOST=0.0.0.0 nohup ollama serve > /home/ec2-user/ollama.log 2>&1 &
-                OLLAMA_HOST=0.0.0.0 ollama run deepseek-r1
+                OLLAMA_HOST=0.0.0.0 nohup sh -c 'ollama serve && ollama run deepseek-r1' > /home/ec2-user/ollama.log 2>&1 &
+                docker run -d --name=code-server -e PUID=1000 -e PGID=1000 -e TZ=Etc/UTC -p 80:8443 -v ~/vscode/config:/config --restart unless-stopped lscr.io/linuxserver/code-server:latest
+
               '
               EOF
   tags = {
