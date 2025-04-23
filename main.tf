@@ -75,6 +75,12 @@ resource "aws_spot_instance_request" "ollama_spot" {
   wait_for_fulfillment = true
   associate_public_ip_address = true
 
+  root_block_device {
+    volume_size = 100
+    volume_type = "gp3"
+    delete_on_termination = true    # Auto delete saat instance dihapus
+  }
+
   user_data = <<-EOF
               #!/bin/bash
               yum update -y

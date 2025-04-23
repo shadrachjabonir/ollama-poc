@@ -1,8 +1,56 @@
-.gitignore
-.idea
-# Local .terraform directories
+# IDE-specific files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Terraform files
 .terraform/
 *.tfstate
 *.tfstate.backup
 *.tfvars
 *.tfvars.json
+
+# Python-related files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+.env.*
+*.venv
+*.egg-info/
+dist/
+build/
+
+# Node.js-related files
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# macOS-specific files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+*.orig
+
+# System files
+Thumbs.db
+Desktop.ini
+
+# Other
+*.lock
+*.coverage
+*.out
+*.class
+*.jar
+*.war
+*.ear
